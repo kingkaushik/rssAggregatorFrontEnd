@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../styles/App.css';
 import {propOne} from '../actions/test'
 import { connect } from 'react-redux'
-
+import {fetchData} from '../api/fetchData'
 class App extends Component {
   componentWillReceiveProps(newProps){
     console.log(newProps);
@@ -16,6 +16,7 @@ class App extends Component {
         <a href="http://localhost:3000/" onClick={e => {
                       e.preventDefault()
                       onClick()
+                      // fetchData()
                       this.props.dispatch(propOne())
                     }}>
                     HEY
