@@ -3,7 +3,6 @@ import "../styles/title.css";
 
 class Title extends Component {
     render() {
-
         return ( <div className="div">{this.props.title}</div>);
     }
 }

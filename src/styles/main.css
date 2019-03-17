@@ -1,21 +1,16 @@
-.div1{
-    position: absolute;
-    top:10px;
-    left:100px;
-    display: block;
-}
-
 .div2
 {
-    position: relative;
     border-bottom:1px ;
+    border-color: '#000';
     opacity:10;
     top:10px;
-    bottom: 20px;   
-    display:flex;
-    flex-direction:row;
+    display: flex;
+    flex-direction: row;
+    bottom: 20px;
     padding:10px;
+    cursor: pointer;
 }
+
 
 .Date
 {

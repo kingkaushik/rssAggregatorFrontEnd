@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import "bootstrap/dist/css/bootstrap.css"
 
 class Description extends Component {
     constructor(props)
@@ -17,9 +16,9 @@ class Description extends Component {
 
         var k=m[0]+'width="250" height= "150" style="border-radius: 10px;"/>';
         // console.log(k);
+        // return m[2]
         return {__html:k};
    }
-
     render() {
 
         return ( <div dangerouslySetInnerHTML={this.getImage()}/>);
