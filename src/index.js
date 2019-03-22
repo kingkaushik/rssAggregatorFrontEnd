@@ -10,11 +10,13 @@ import {
     Route,
   } from 'react-router-dom';
 import Header from './components/Header'
+import Subscription from './screens/Subscription'
 ReactDOM.render(<Router>
     <div>
       <Header/>
       <Route exact path='/' component={Main} />
       <Route path='/content' component={Content} />
+      <Route path='/subscription' component={Subscription} />
     </div>
   </Router>, document.getElementById('root'));
 

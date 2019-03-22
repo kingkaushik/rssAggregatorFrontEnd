@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Title from './title';
-import Image from './image';
-import Date from './date';
+// import Title from './title';
+// import Image from './image';
+// import Date from './date';
 import "../styles/main.css";
 import data from '../data'//need to remove
 
@@ -12,47 +12,44 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
-import ListItemText from '@material-ui/core/ListItemText';
 
 class Counter extends Component {
     constructor(props)
     {
         super(props);
         this.state={
-            js:[...data],
+            js:[],
             isRedirect:false,
-            id:''
+            id:'',
+            subscriptions:[]
         };
         this.content=this.content.bind(this);
     }
     fetchData(){
-      const that=this;
-      console.log('fetchData');
-        // console.log('I am called');
-        var data = null;
+        const that=this;
+        var data = JSON.stringify([
+          "toi.tech",
+          "toi.sports"
+        ]);
 
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
 
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === 4) {
-            console.log(this);
-            // console.log(typeof(this.responseText));
             // console.log(JSON.parse(this.responseText));
-            console.log(that);
+            // console.log(this.responseText);
+            that.setState({js:JSON.parse(this.responseText)},()=>{
+            })
           }
         });
 
-        xhr.open("GET", "http://localhost:4000");
-        xhr.setRequestHeader("cache-control", "no-cache");
-        xhr.setRequestHeader("Postman-Token", "0a65afe3-caa1-4740-b2b1-8895853113a0");
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.setRequestHeader("Access-Control-Allow-Headers", "X-PINGOTHER");
-        xhr.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        xhr.setRequestHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0");
+        xhr.open("POST", "http://localhost:5000/api/fetch_articles");
+        xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(data);
     }
     componentDidMount() {
+        this.fetchData();
         if (this.state.id) {
 
         } else if (window.location.search) {
@@ -70,12 +67,12 @@ class Counter extends Component {
 
     }
     content = (x) => {
-
+      console.log('x is',x);
         this.props.history.push({
             pathname: '/content',
             state: {
                 title: x.title,
-                date: x.date,
+                date: x.pubDate,
                 description: x.description,
                 link: x.link
             }
@@ -92,15 +89,14 @@ class Counter extends Component {
     }
     SimpleCard(props,item) {
       const { classes } = props;
-      const bull = <span className={classes.bullet}>•</span>;
 
       return (
 
-        <Card className={classes.card}>
+        <Card className={classes.card} key={item.title}>
           <CardHeader title={item.title}/>
           <CardContent >
             <Typography component="p">
-              {this.getDate(item.date)}
+              {this.getDate(item.pubDate)}
             </Typography>
           </CardContent>
           <CardActions>

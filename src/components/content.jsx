@@ -17,7 +17,7 @@ class Content extends Component {
     render() {
         return (
 
-        <div className="div1">
+        <div className="div1" style={{marginTop:50}}>
             <div className="divFlex">
 
                 <div className="div3">
