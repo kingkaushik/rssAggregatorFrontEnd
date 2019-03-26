@@ -94,13 +94,15 @@ class Main extends Component {
       return apiSubscriptions;
     }
     getDate(date){
-        var date_formatted=[];
-        for(var i=0;i<date.length;i++)
-        {
-            date_formatted[i]=date[i];
-        }
-        // console.log(date_formatted);
-        return date_formatted;
+      let now = new Date(date);
+    	let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    	let monthIndex = now.getMonth();
+    	let nowDate = now.getDate();
+    	let fullYear = now.getFullYear();
+    	let hours = now.getHours().toString();
+    	if(hours.length === 1)hours  = '0' + hours;
+    	let minutes = now.getMinutes();
+    	return `${months[monthIndex]} ${nowDate}, ${fullYear} ${hours}:${minutes}`;
     }
     getImage(item){
          var rex = /<img[^>]+?\s+src="?([^"\s]+)"?\s*"/g;
