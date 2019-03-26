@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // import Image from './image';
 // import Date from './date';
 import "../styles/main.css";
-import data from '../data'//need to remove
+// import data from '../data'
 
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -12,84 +12,108 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
+import links from '../links'
 
-class Counter extends Component {
-    constructor(props)
-    {
+class Main extends Component {
+    constructor(props){
         super(props);
         this.state={
             js:[],
             isRedirect:false,
             id:'',
-            subscriptions:[]
+            subscriptions:[],
+            reload:true,
         };
         this.content=this.content.bind(this);
     }
-    fetchData(){
+    fetchData(data){
+        if(!this.state.reload){
+          return
+        }
         const that=this;
-        var data = JSON.stringify([
-          "toi.tech",
-          "toi.sports"
-        ]);
-
+        data=JSON.stringify(data)
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
 
         xhr.addEventListener("readystatechange", function () {
-          if (this.readyState === 4) {
-            // console.log(JSON.parse(this.responseText));
-            // console.log(this.responseText);
-            that.setState({js:JSON.parse(this.responseText)},()=>{
+          if (this.readyState === 4 && this.status===200) {
+            that.setState({
+              js:JSON.parse(this.responseText),
+              subscriptions:JSON.parse(data),
+              reload:false,
             })
           }
         });
 
-        xhr.open("POST", "http://localhost:5000/api/fetch_articles");
+        xhr.open("POST", links.fetch_articles);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(data);
     }
     componentDidMount() {
-        this.fetchData();
+
         if (this.state.id) {
 
-        } else if (window.location.search) {
-            let id = window.location.search.substr(4)
+        }else if (localStorage.hasOwnProperty('id')) {
+            let id = localStorage.getItem('id')
             this.setState({
                 id: id
+            },()=>{
+              if(window.location.search){
+                this.getSubscriptionFromDB()
+              }
             })
-            localStorage.setItem("id", id);
-        } else if (localStorage.hasOwnProperty('id')) {
-            let id = localStorage.getItem('id').substr(4)
-            this.setState({
-                id: id
-            })
+        }
+        if(localStorage.hasOwnProperty('subscriptions')){
+          let subscriptions=localStorage.getItem('subscriptions')
+          this.setState({
+              subscriptions: subscriptions
+          })
+          let apiSubscriptions=this.getSubscription(JSON.parse(subscriptions))
+          this.fetchData(apiSubscriptions);
+        }else{
+
         }
 
     }
     content = (x) => {
-      console.log('x is',x);
-        this.props.history.push({
-            pathname: '/content',
-            state: {
-                title: x.title,
-                date: x.pubDate,
-                description: x.description,
-                link: x.link
-            }
-        })
+      // console.log('x is',x);
+      this.props.history.push({
+          pathname: '/content',
+          state: {
+              title: x.title,
+              date: x.pubDate,
+              description: x.description,
+              link: x.link
+          }
+      })
     }
-    getDate(date)
-    {
+    getSubscription(data){
+      let apiSubscriptions=data.map((a,i)=>{
+        return a.value;
+      })
+      return apiSubscriptions;
+    }
+    getDate(date){
         var date_formatted=[];
-        for(var i=0;i<date.length-5;i++)
+        for(var i=0;i<date.length;i++)
         {
             date_formatted[i]=date[i];
         }
+        // console.log(date_formatted);
         return date_formatted;
     }
+    getImage(item){
+         var rex = /<img[^>]+?\s+src="?([^"\s]+)"?\s*"/g;
+         var m = rex.exec( item.description );
+         if(m && m[1]){
+           return m[1];
+         }
+         return undefined;
+    }
     SimpleCard(props,item) {
+      // let imageLink=this.getImage(item);
       const { classes } = props;
-
+      // <img src={imageLink} alt="Logo" width="250" height= "150"/>
       return (
 
         <Card className={classes.card} key={item.title}>
@@ -101,40 +125,52 @@ class Counter extends Component {
           </CardContent>
           <CardActions>
             <Button color="primary" className={classes.button} onClick={()=>this.content(item)}>Learn More</Button>
+            <Button color="primary" className={classes.button} onClick={()=>window.open(item.link, "_blank")}>Visit Website</Button>
           </CardActions>
         </Card>
       );
     }
+    getSubscriptionLabel(key){
+        let a;
+    }
+    getSubscriptionFromDB(){
+      console.log('getSubscriptionFromDB called');
+      var data = JSON.stringify({
+        "userId": this.state.id
+      });
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+      const that=this
+      xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+          console.log('response from db',this.responseText);
+          let subscriptionsObject=JSON.parse(this.responseText).map((a,i)=>{
+            let newItem = {
+              key: 1 + Math.random(),
+              label: a,
+              value: a
+            };
+            // this.getSubscriptionLabel(a);
+            return newItem;
+          })
+          localStorage.setItem('subscriptions',JSON.stringify(subscriptionsObject))
+          that.fetchData(JSON.parse(this.responseText));
+        }
+      });
 
-
-
-    render()
-    {
-        /*<li dangerouslySetInnerHTML={ {__html: x.description} }/>*/
-        // return(
-        //    <div className="div1" style={styles.parent}>
-        //     {this.state.js.map(
-        //         (item)=>{
-        //           return(
-        //             <div key={item.title} id="parent_div" className="div2" onClick={()=>this.content(item)}>
-        //               <div className="Image" >
-        //                   <Image key={item.image} description={item.description} />
-        //               </div>
-        //               <div>
-        //                   <div className="Title">
-        //                       <Title key={item.title} title={item.title}/>
-        //                   </div>
-        //                   <div className="Date">
-        //                       <Date key={item.date} date={item.date}/>
-        //                   </div>
-        //               </div>
-        //           </div>
-        //         );
-        //       }
-        //     )}
-        //   </div>
-        // );
-
+      xhr.open("POST", links.fetch_subscribtions);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(data);
+    }
+    render(){
+        if(this.state.id && !localStorage.hasOwnProperty('subscriptions')){
+          this.getSubscriptionFromDB();
+        }
+        if(this.props.location.state && this.props.location.state.reload && (this.state.subscriptions.length === 0)){
+          //this is called first time when user signs up
+          let apiSubscriptions=this.getSubscription(this.props.location.state.subscriptions)
+          this.fetchData(apiSubscriptions)
+        }
         return (
           <div className="div1" style={styles.parent}>
             {this.state.js.map((item)=>{
@@ -147,8 +183,8 @@ class Counter extends Component {
 const styles = {
   parent:{
     marginTop:60,
-    marginLeft:'10%',
-    marginRight:'10%',
+    marginLeft:'20%',
+    marginRight:'20%',
   },
   root: {
     flexGrow: 1,
@@ -158,7 +194,7 @@ const styles = {
   },
 
   card: {
-    minWidth: 475,
+    minWidth: 775,
     margin:20,
   },
   bullet: {
@@ -174,4 +210,4 @@ const styles = {
     marginBottom: 12,
   },
 };
-export default withStyles(styles)(Counter);
+export default withStyles(styles)(Main);

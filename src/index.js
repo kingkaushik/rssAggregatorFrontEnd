@@ -13,7 +13,7 @@ import Header from './components/Header'
 import Subscription from './screens/Subscription'
 ReactDOM.render(<Router>
     <div>
-      <Header/>
+      <Route path='/' component={Header} />
       <Route exact path='/' component={Main} />
       <Route path='/content' component={Content} />
       <Route path='/subscription' component={Subscription} />
