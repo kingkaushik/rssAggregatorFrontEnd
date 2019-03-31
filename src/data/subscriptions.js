@@ -7,8 +7,15 @@ export const categories=[
   { value: 'sports', label: 'sports' },
   { value: 'health', label: 'health' },
   { value: 'science', label: 'science' },
+  { value: 'tech', label: 'tech' },
 ]
 export const websites={
+  tech:[
+    { value: 'toi', label: 'Times Of India' },
+    { value: 'wired', label: 'Wired.com' },
+    { value: 'engadget', label: 'Engadget.com' },
+    { value: 'techcrunch', label: 'Techcrunch.com' },
+  ],
   india:[
     { value: 'toi', label: 'Times Of India' }
   ],

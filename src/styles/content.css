@@ -6,6 +6,8 @@
     left:1px;
     float:left;
     padding:5px;
+    margin-left:150px;
+    margin-right:250px;
 }
 .divFlex
 {
@@ -13,36 +15,27 @@
 }
 
 .date{
-    position: relative;
-    top:5px;
-    bottom:5px;
-    left:1px;
-    float:left;
-    padding:5px;
+    margin-top:15px;
+    left: 15px;
+}
+
+.image{
+    margin-top:20px;
 }
 
 .div3{
-    position: relative;
-    top:5px;
-    bottom:5px;
-    left:1px;
-    float:left;
+    margin-top:10px;
     padding:5px;
 }
 
 .div4{
-    position: relative;
-    top:25px;
-    bottom:5px;
-    left:1px;
+    margin-top:15px;
     float:left;
     padding:5px;
 }
 .div5{
-    position: relative;
-    top:25px;
-    bottom:5px;
-    left:1px;
-    float:left;
+    position:relative;
+    margin-top:35px;
+    left:30%;
     padding:5px;
 }

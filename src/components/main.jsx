@@ -101,7 +101,8 @@ class Main extends Component {
     	let fullYear = now.getFullYear();
     	let hours = now.getHours().toString();
     	if(hours.length === 1)hours  = '0' + hours;
-    	let minutes = now.getMinutes();
+    	let minutes = now.getMinutes().toString();
+      if(minutes.length === 1)minutes  = '0' + minutes;
     	return `${months[monthIndex]} ${nowDate}, ${fullYear} ${hours}:${minutes}`;
     }
     getImage(item){
